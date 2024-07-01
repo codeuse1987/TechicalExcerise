@@ -38,11 +38,6 @@
 			<artifactId>expressly</artifactId>
 			<version>5.0.0-M1</version>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-
-		</dependency>
 		<!--
 		https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine -->
 		<dependency>
@@ -73,12 +68,16 @@
 		<dependency>
 			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-community-dialects</artifactId>
-
 		</dependency>
+
+		<!--
+		https://mvnrepository.com/artifact/org.hibernate.dialect/sqlite-dialect -->
+
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			n> </dependency>
+		</dependency>
+
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>

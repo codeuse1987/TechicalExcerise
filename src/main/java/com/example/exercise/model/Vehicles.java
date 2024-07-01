@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import com.example.exercise.enity.Vehicle;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 public class Vehicles {
-	
-	public ArrayList< @Valid Vehicle> vehicles;
+
+	@NotNull
+	public ArrayList<@Valid Vehicle> vehicles;
 
 	public ArrayList<Vehicle> getVehicles() {
 		return vehicles;
@@ -18,4 +20,10 @@ public class Vehicles {
 		this.vehicles = vehicles;
 	}
 
+	public Vehicles() {
+	}
+
+	public Vehicles(ArrayList<Vehicle> data) {
+		this.vehicles = data;
+	}
 }
