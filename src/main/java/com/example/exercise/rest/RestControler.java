@@ -21,29 +21,19 @@ import com.example.exercise.service.VehicleSvc;
 @Validated
 @RestController
 @RequestMapping
-public class RestControler extends ResponsePacker{
+public class RestControler extends ResponsePacker {
 
 	@Autowired
 	private VehicleSvc vehicleSvc;
 
 	@PostMapping(value = "/vehicles")
 	public ResponseEntity<?> createVehicles(@RequestBody Vehicles body) throws ApplicationException {
-//		try {
-//			ArrayList<Vehicle> data = vehicleSvc.createVehicles(body);
-//			return ResponseEntity.ok(data);
-//		} catch (Exception e) {
-//			return new ResponseEntity<Exception>(HttpStatus.BAD_REQUEST);
-		if (body == null) {
-			throw new ApplicationException("Code1", "Msg");
-		}
-
 		try {
 			ArrayList<Vehicle> data = vehicleSvc.createVehicles(body);
 			return this.processResult(data);
 		} catch (Exception e) {
 			return this.processResult(e);
 		}
-
 	}
 
 	@GetMapping(value = "/get")

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.exercise.model.HttpResponseModel;
 
-
 @Service
 public class ResponsePacker {
 
@@ -32,13 +31,14 @@ public class ResponsePacker {
 	}
 
 	private ResponseEntity<?> processFailResult(Exception e) {
-		System.out.println(e.getClass());
+		logger.debug(e.getMessage());
 		if (e instanceof ApplicationException) {
 			HttpResponseModel response = new HttpResponseModel();
 			response.setResult(false);
 			response.setMsgCode(((ApplicationException) e).getErrCode());
 			response.setMessage(((ApplicationException) e).getErrMsg());
-			return ResponseEntity.ok(response);
+//			return ResponseEntity.ok(response);
+			return new ResponseEntity<HttpResponseModel>(response, HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<Exception>(e, HttpStatus.BAD_REQUEST);
 	}

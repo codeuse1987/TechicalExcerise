@@ -13,11 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.exercise.enity.Vehicle;
 import com.example.exercise.model.Vehicles;
@@ -26,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 class ExerciseApplicationTests {
 
 	@Autowired
@@ -39,6 +42,7 @@ class ExerciseApplicationTests {
 //	String message = "BrowserStack is the intended message";
 
 	@Test
+	@Rollback
 	public void testCaseOne() throws Throwable {
 		// Arrange
 		logger.info(StringUtils.capitalize(Thread.currentThread().getStackTrace()[1].getMethodName()), " started");
@@ -64,6 +68,7 @@ class ExerciseApplicationTests {
 	}
 
 	@Test
+	@Rollback
 	public void testCaseTwo() throws Throwable {
 		// Arrange
 		logger.info(StringUtils.capitalize(Thread.currentThread().getStackTrace()[1].getMethodName()), " started");
@@ -76,13 +81,14 @@ class ExerciseApplicationTests {
 		// Assert
 //		MockHttpServletResponse response = result.andDo(MockMvcResultHandlers.print()).andReturn().getResponse();
 
-		result.andDo(MockMvcResultHandlers.print()).andExpect(status().is5xxServerError()).andReturn();
+		result.andDo(MockMvcResultHandlers.print()).andExpect(status().isBadRequest()).andReturn();
 //		assertEquals(HttpStatus.CREATED.value(), response.getStatus());
 //		result.andExpect(.isCreated());
 //		.andExpect(header().string("Location", "http://localhost/vehicles"));
 	}
 
 	@Test
+	@Rollback
 	public void testCaseThree() throws Throwable {
 		// Arrange
 		logger.info(StringUtils.capitalize(Thread.currentThread().getStackTrace()[1].getMethodName()), " started");
@@ -107,11 +113,40 @@ class ExerciseApplicationTests {
 	}
 
 	@Test
+	@Rollback
 	public void testCaseFour() throws Throwable {
 		// Arrange
 		logger.info(StringUtils.capitalize(Thread.currentThread().getStackTrace()[1].getMethodName()), " started");
 
-		Vehicle data = new Vehicle("45", "ford", null);
+		Vehicle data = new Vehicle("01", "ford", 2);
+		Vehicles datas = new Vehicles(new ArrayList<Vehicle>(Arrays.asList(data)));
+
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json = ow.writeValueAsString(datas);
+
+		// Act
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/vehicles").accept(MediaType.APPLICATION_JSON)
+				.content(json).contentType(MediaType.APPLICATION_JSON);
+		ResultActions result = mockMvc.perform(requestBuilder);
+
+		// Assert
+//		MockHttpServletResponse response = result.andDo(MockMvcResultHandlers.print()).andReturn().getResponse();
+
+		result.andDo(MockMvcResultHandlers.print()).andExpect(status().isBadRequest()).andReturn();
+//		assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+//		result.andExpect(.isCreated());
+//		.andExpect(header().string("Location", "http://localhost/vehicles"));
+	}
+
+	@Test
+	@Rollback
+	public void testCaseFive() throws Exception {
+
+		logger.info(StringUtils.capitalize(Thread.currentThread().getStackTrace()[1].getMethodName()), " started");
+
+		// Arrange
+
+		Vehicle data = new Vehicle("Three", "ford", null);
 		Vehicles datas = new Vehicles(new ArrayList<Vehicle>(Arrays.asList(data)));
 
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
@@ -126,32 +161,171 @@ class ExerciseApplicationTests {
 //		MockHttpServletResponse response = result.andDo(MockMvcResultHandlers.print()).andReturn().getResponse();
 
 		result.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk()).andReturn();
-//		assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-//		result.andExpect(.isCreated());
-//		.andExpect(header().string("Location", "http://localhost/vehicles"));
 	}
 
 	@Test
-	public void testCaseFive() throws Exception {
-		// Arrange
+	@Rollback
+	public void testCaseSix() throws Exception {
+
 		logger.info(StringUtils.capitalize(Thread.currentThread().getStackTrace()[1].getMethodName()), " started");
 
-//		Vehicle data = new Vehicle("333", "ford", null);
-//		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-//		String json = ow.writeValueAsString(data);
+		// Arrange
+
+		Vehicle data = new Vehicle(null, "ford", 2);
+		Vehicles datas = new Vehicles(new ArrayList<Vehicle>(Arrays.asList(data)));
+
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json = ow.writeValueAsString(datas);
 
 		// Act
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/get").accept(MediaType.APPLICATION_JSON)
-				.contentType(MediaType.APPLICATION_JSON);
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/vehicles").accept(MediaType.APPLICATION_JSON)
+				.content(json).contentType(MediaType.APPLICATION_JSON);
 		ResultActions result = mockMvc.perform(requestBuilder);
 
 		// Assert
-		result.andExpect(status().isOk()).andReturn();
+//		MockHttpServletResponse response = result.andDo(MockMvcResultHandlers.print()).andReturn().getResponse();
 
-//		result.andExpect(status().isCreated())
-//		assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-//		result.andExpect(.isCreated());
-//		.andExpect(header().string("Location", "http://localhost/vehicles"));
+		result.andDo(MockMvcResultHandlers.print()).andExpect(status().isBadRequest()).andReturn();
 	}
 
+	@Test
+	@Rollback
+	public void testCaseSeven() throws Exception {
+
+		logger.info(StringUtils.capitalize(Thread.currentThread().getStackTrace()[1].getMethodName()), " started");
+
+		// Arrange
+
+		Vehicle data = new Vehicle("Four", null, 2);
+		Vehicles datas = new Vehicles(new ArrayList<Vehicle>(Arrays.asList(data)));
+
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json = ow.writeValueAsString(datas);
+
+		// Act
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/vehicles").accept(MediaType.APPLICATION_JSON)
+				.content(json).contentType(MediaType.APPLICATION_JSON);
+		ResultActions result = mockMvc.perform(requestBuilder);
+
+		// Assert
+//		MockHttpServletResponse response = result.andDo(MockMvcResultHandlers.print()).andReturn().getResponse();
+
+		result.andDo(MockMvcResultHandlers.print()).andExpect(status().isBadRequest()).andReturn();
+	}
+
+	@Test
+	@Rollback
+	public void testCaseEight() throws Exception {
+
+		logger.info(StringUtils.capitalize(Thread.currentThread().getStackTrace()[1].getMethodName()), " started");
+
+		// Arrange
+
+		Vehicle data = new Vehicle("Four", "VW", 2);
+		Vehicles datas = new Vehicles(new ArrayList<Vehicle>(Arrays.asList(data)));
+
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json = ow.writeValueAsString(datas);
+
+		// Act
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/vehicles").accept(MediaType.APPLICATION_JSON)
+				.content(json).contentType(MediaType.APPLICATION_JSON);
+		ResultActions result = mockMvc.perform(requestBuilder);
+
+		// Assert
+//		MockHttpServletResponse response = result.andDo(MockMvcResultHandlers.print()).and 
+		result.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk()).andReturn();
+	}
+
+	@Test
+	@Rollback
+	public void testCaseNine() throws Exception {
+
+		logger.info(StringUtils.capitalize(Thread.currentThread().getStackTrace()[1].getMethodName()), " started");
+
+		// Arrange
+
+		Vehicle data = new Vehicle("999", "Ford", 1003);
+		Vehicles datas = new Vehicles(new ArrayList<Vehicle>(Arrays.asList(data)));
+
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json = ow.writeValueAsString(datas);
+
+		// Act
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/vehicles").accept(MediaType.APPLICATION_JSON)
+				.content(json).contentType(MediaType.APPLICATION_JSON);
+		ResultActions result = mockMvc.perform(requestBuilder);
+
+		// Assert
+//		MockHttpServletResponse response = result.andDo(MockMvcResultHandlers.print()).and 
+		result.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk()).andReturn();
+	}
+
+	@Test
+	@Rollback
+	public void testCaseTen() throws Exception {
+
+		logger.info(StringUtils.capitalize(Thread.currentThread().getStackTrace()[1].getMethodName()), " started");
+
+		// Arrange
+
+		Vehicle data = new Vehicle("997", "Ford", 2);
+		Vehicles datas = new Vehicles(new ArrayList<Vehicle>(Arrays.asList(data)));
+
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json = ow.writeValueAsString(datas);
+
+		// Act
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/vehicles").accept(MediaType.APPLICATION_JSON)
+				.content(json).contentType(MediaType.APPLICATION_JSON);
+		ResultActions result = mockMvc.perform(requestBuilder);
+
+		// Assert
+		result.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk()).andReturn();
+	}
+
+	@Test
+	@Rollback
+	public void testCaseEleven() throws Exception {
+
+		logger.info(StringUtils.capitalize(Thread.currentThread().getStackTrace()[1].getMethodName()), " started");
+
+		// Arrange
+		Vehicles datas = new Vehicles(
+				new ArrayList<Vehicle>(Arrays.asList(new Vehicle("five", "Ford", 1001), new Vehicle("six", "GM", 2))));
+
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json = ow.writeValueAsString(datas);
+
+		// Act
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/vehicles").accept(MediaType.APPLICATION_JSON)
+				.content(json).contentType(MediaType.APPLICATION_JSON);
+		ResultActions result = mockMvc.perform(requestBuilder);
+
+		// Assert
+		result.andDo(MockMvcResultHandlers.print()).andExpect(status().isBadRequest()).andReturn();
+	}
+
+	@Test
+	@Rollback
+	public void testCaseTwelve() throws Exception {
+
+		logger.info(StringUtils.capitalize(Thread.currentThread().getStackTrace()[1].getMethodName()), " started");
+
+		// Arrange
+		Vehicles datas = new Vehicles(
+				new ArrayList<Vehicle>(Arrays.asList(new Vehicle("five", "Ford", 2), new Vehicle("six", "GM", 1002))));
+
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json = ow.writeValueAsString(datas);
+
+		// Act
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/vehicles").accept(MediaType.APPLICATION_JSON)
+				.content(json).contentType(MediaType.APPLICATION_JSON);
+		ResultActions result = mockMvc.perform(requestBuilder);
+
+		// Assert
+		result.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk()).andReturn();
+	}
 }
+

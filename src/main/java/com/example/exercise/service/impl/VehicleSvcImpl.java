@@ -40,21 +40,21 @@ public class VehicleSvcImpl implements VehicleSvc {
 				.filter(v -> v.getBay_number() == null || v.getBay_number() < 100)
 				.collect(Collectors.toCollection(ArrayList::new));
 
-		if (filtedBayNo.isEmpty()) {
-			throw new ApplicationException("Code", "Msg");
+		if (!filtedBayNo.isEmpty()) {
+			// Pre check any non-unique VIN, if do return error
+			ArrayList<Vehicle> existed = vehicleDao.findByVinIn(
+					filtedBayNo.stream().map(v -> v.getVin()).collect(Collectors.toCollection(ArrayList::new)));
+			if (!existed.isEmpty()) {
+				throw new ApplicationException(String.format("Following VIN(s) is existed in the database: [%s]",
+						existed.stream().map(v -> v.getVin()).collect(Collectors.joining(","))));
+			}
+
+			for (Vehicle v : filtedBayNo) {
+				Vehicle saved = vehicleDao.save(v);
+				result.add(saved);
+			}
 		}
 
-		// Pre check any non-unique VIN, if do return error
-		ArrayList<Vehicle> existed = vehicleDao.findByVinIn(
-				filtedBayNo.stream().map(v -> v.getVin()).collect(Collectors.toCollection(ArrayList::new)));
-		if (!existed.isEmpty()) {
-			throw new ApplicationException("Code1", "Msg");
-		}
-
-		for (Vehicle v : filtedBayNo) {
-			Vehicle saved = vehicleDao.save(v);
-			result.add(saved);
-		}
 		return result;
 	}
 

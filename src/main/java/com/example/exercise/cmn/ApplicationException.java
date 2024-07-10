@@ -2,6 +2,7 @@ package com.example.exercise.cmn;
 
 import java.text.MessageFormat;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class ApplicationException.
  */
@@ -9,24 +10,28 @@ public class ApplicationException extends Exception {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -7306999265277221160L;
-	
+
 	/** The err code. */
 	private String errCode;
-	
+
 	/** The err msg. */
 	private String errMsg;
-	
+
 	/** The err params. */
 	private Object[] errParams;
 
+//	public ApplicationException(String errCode) {
+//		super(errCode);
+//		this.errCode = errCode;
 	/**
 	 * Instantiates a new application exception.
 	 *
-	 * @param errCode the err code
+	 * @param errMsg the err msg
 	 */
-	public ApplicationException(String errCode) {
-		super(errCode);
-		this.errCode = errCode;
+//	}
+	public ApplicationException(String errMsg) {
+		super(errMsg);
+		this.errMsg = errMsg;
 	}
 
 	/**
@@ -42,7 +47,7 @@ public class ApplicationException extends Exception {
 	 * Instantiates a new application exception.
 	 *
 	 * @param errCode the err code
-	 * @param cause the cause
+	 * @param cause   the cause
 	 */
 	public ApplicationException(String errCode, Throwable cause) {
 		super(errCode, cause);
@@ -53,7 +58,7 @@ public class ApplicationException extends Exception {
 	 * Instantiates a new application exception.
 	 *
 	 * @param errCode the err code
-	 * @param errMsg the err msg
+	 * @param errMsg  the err msg
 	 */
 	public ApplicationException(String errCode, String errMsg) {
 		super(errCode);
@@ -65,8 +70,8 @@ public class ApplicationException extends Exception {
 	 * Instantiates a new application exception.
 	 *
 	 * @param errCode the err code
-	 * @param errMsg the err msg
-	 * @param cause the cause
+	 * @param errMsg  the err msg
+	 * @param cause   the cause
 	 */
 	public ApplicationException(String errCode, String errMsg, Throwable cause) {
 		super(errCode, cause);
@@ -77,8 +82,8 @@ public class ApplicationException extends Exception {
 	/**
 	 * Instantiates a new application exception.
 	 *
-	 * @param errCode the err code
-	 * @param errMsg the err msg
+	 * @param errCode   the err code
+	 * @param errMsg    the err msg
 	 * @param errParams the err params
 	 */
 	public ApplicationException(String errCode, String errMsg, String... errParams) {
@@ -91,9 +96,9 @@ public class ApplicationException extends Exception {
 	/**
 	 * Instantiates a new application exception.
 	 *
-	 * @param cause the cause
-	 * @param errCode the err code
-	 * @param errMsg the err msg
+	 * @param cause     the cause
+	 * @param errCode   the err code
+	 * @param errMsg    the err msg
 	 * @param errParams the err params
 	 */
 	public ApplicationException(Throwable cause, String errCode, String errMsg, String... errParams) {
